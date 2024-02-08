@@ -1,0 +1,175 @@
+---
+title: '<font size = 7 color = "white">Cali Housing Market</font>'
+subtitle: '<img src="img/logo_1.png" width=100 height=100><img
+src="img/RMarkdown-logo.png" width=90 height=100> <img
+src="img/xaringan-logo.png" width=90 height=100>'
+author: '<font size = 5 color = "white"> Jessica Gorr </font>'
+institute: '<font size = 6 color = "white">West Chester University of
+Pennsylvania</font><br> '
+date: ' <font color = "white" size =4> Prepared for<br> </font> <br>
+<font color = "gold" size = 6> STA533: HTML Presentation </font> <br>
+<br> <font color = "white" size = 3> Slides available at: https://rpubs.com/jgorr01 AND https://github.com/jessgorr01/jGorrCV</font>'
+output:
+ xaringan::moon_reader:
+ css: css/xaringan-themer01.css
+ nature:
+ slideNumberFormat: "%current%"
+ highlightStyle: github
+ highlightLines: true
+ ratio: 15:6
+ countIncrementalSlides: true
+---
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+if (!require("knitr")) {
+   install.packages("knitr")
+   library(knitr)
+}
+if (!require("pander")) {
+   install.packages("pander")
+   library(pander)
+}
+if (!require("plotly")) {
+   install.packages("plotly")
+   library(plotly)
+}
+if (!require("ggplot2")) {
+   install.packages("ggplot2")
+   library(ggplot2)
+}
+knitr::opts_chunk$set(
+                  fig.width=3, 
+                  fig.height=3, 
+                  fig.retina=12,
+                  out.width = "100%",
+                  cache = FALSE,
+                  echo = TRUE,
+                  message = FALSE, 
+                  warning = FALSE,
+                  hiline = TRUE
+                  )
+```
+
+
+```{r xaringan-themer, include=FALSE, warning=FALSE}
+library(xaringanthemer)
+  style_duo_accent(primary_color = "#1F4257",
+          secondary_color = "#380F2A",
+          # fonts
+          header_font_google = google_font("Martel"),
+          text_font_google = google_font("Lato"),
+          code_font_google = google_font("Fira Mono"))
+```
+
+class:inverse4, top
+
+<h1 align="center"> Table of Contents</h1>
+<BR>
+
+.pull-left[
+- Data background
+   - searchable table
+- Model Building
+   - R code
+- SLR Assumptions
+   - Normality
+   - Independence
+   - Homoscedasticity
+   -Linearity
+- Analysis
+   - Model Fit
+   - written Analysis
+- Conclusion   
+]
+
+---
+
+<h1 align = "center">CA Housing Price Data <font color="orange">Search Table</font></h1>
+<BR>
+```{r echo=FALSE, fig.align='left', out.width = '400px'}
+house <- read.csv("ca-housing-price.csv")
+DT::datatable(head(house), rownames = F)
+``` 
+---
+<h1 align = "center">Key <font color="orange">Variables</font></h1>
+<BR>
+.pull-left[
+- Explanatory
+   - median_income
+   
+   
+   <br><br>
+   <center>
+   <img src="img/money.gif" width=300 height=200>
+   </center>
+]
+.pull-right[
+- Response
+  - median_house_value
+  
+  
+  <br><br>
+  <center>
+  <img src="img/housing.gif" width=300 height=200>
+  </center>
+]
+
+---
+name:model building
+
+<h1 align="center"> Model <font color="orange">Building and Formula</font></h1>
+<br>
+```{r}
+house <- read.csv("ca-housing-price.csv")
+mod = lm(formula = median_house_value ~ median_income, data = house)
+```
+<br>
+<center>
+$y=\beta_0+\beta_1x_1+\epsilon$, where $\epsilon \sim N(0, \sigma^2)$.
+<br>
+$MedianHouseValue=\beta_0+\beta_1*MedianIncome+\epsilon$.</center>
+---
+
+<h1 align="center"> Model <font color="orange">Summary and CV</font></h1>
+```{r,  echo=FALSE}
+house <- read.csv("ca-housing-price.csv")
+mod = lm(formula = median_house_value ~ median_income, data = house)
+summary(mod)
+CV <- 100*(sigma(mod)/mean(house$median_house_value))
+CV
+confint(mod, "median_income", level=.95)
+```
+---
+<h1 align="center"> Simple Linear Regression Assumptions - <font color="orange">Linearity</font></h1>
+```{r echo=FALSE, fig.align='center', out.width = '600px'}
+house <- read.csv("ca-housing-price.csv")
+plot(house$median_income, house$median_house_value, xlab="income", ylab="house price")
+abline(lm(median_house_value~median_income, data=house), col="red")
+```
+---
+<h1 align="center"> Assumptions Continued - <font color="orange">Normality</font></h1>
+```{r echo=FALSE, out.width = '600px'}
+house <- read.csv("ca-housing-price.csv")
+income <- house$median_income
+hist(income)
+```
+---
+<h1 align="center"> Cont. - <font color="orange">Homoscedasticity & Independence</font></h1>
+```{r echo=FALSE, results = FALSE, out.width = '600px'}
+house <- read.csv("ca-housing-price.csv")
+mod = lm(formula = median_house_value ~ median_income, data = house)
+mod
+res <- resid(mod)
+plot(fitted(mod), res)
+abline(0,0)
+
+```
+---
+<h1 align="center"><font color="orange">Conclusion</font></h1>
+   <center>
+   <br><br>
+   <img src="img/market.jpg" width=300 height=200>
+   </center>
+   <br><br><br>
+  <h1 align="center">Thank You!</h1>
+
