@@ -1,0 +1,706 @@
+<style type="text/css">
+
+/* Table of content - navigation */
+div#TOC li {
+    list-style:none;
+    background-color:lightgray;
+    background-image:none;
+    background-repeat:none;
+    background-position:0;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #780c0c;
+}
+
+
+/* Title fonts */
+h1.title {
+  font-size: 24px;
+  color: darkblue;
+  text-align: center;
+  font-family: Arial, Helvetica, sans-serif;
+  font-variant-caps: normal;
+}
+h4.author { 
+  font-size: 18px;
+  font-family: Arial, Helvetica, sans-serif;
+  color: navy;
+  text-align: center;
+}
+h4.date { 
+  font-size: 18px;
+  font-family: Arial, Helvetica, sans-serif;
+  color: darkblue;
+  text-align: center;
+}
+
+/* Section headers */
+h1 {
+    font-size: 22px;
+    font-family: "Times New Roman", Times, serif;
+    color: darkred;
+    text-align: left;
+}
+
+h2 {
+    font-size: 18px;
+    font-family: "Times New Roman", Times, serif;
+    color: navy;
+    text-align: left;
+}
+
+h3 { 
+    font-size: 15px;
+    font-family: "Times New Roman", Times, serif;
+    color: darkred;
+    text-align: left;
+}
+
+h4 {
+    font-size: 18px;
+    font-family: "Times New Roman", Times, serif;
+    color: darkred;
+    text-align: left;
+}
+
+/* Decoration of hyperlinks  */
+
+/* unvisited link */
+a:link {
+  color: green;
+}
+
+/* visited link */
+a:visited {
+  color: purple;
+}
+
+/* mouse over link */
+a:hover {
+  color: red;
+}
+
+/* selected link */
+a:active {
+  color: yellow;
+}
+</style>
+
+```{r setup, include=FALSE}
+# code chunk specifies whether the R code, warnings, and output 
+# will be included in the output files.
+if (!require("tidyverse")) {
+   install.packages("tidyverse")
+   library(tidyverse)
+}
+if (!require("knitr")) {
+   install.packages("knitr")
+   library(knitr)
+}
+if (!require("cowplot")) {
+   install.packages("cowplot")
+   library(cowplot)
+}
+if (!require("latex2exp")) {
+   install.packages("latex2exp")
+   library(latex2exp)
+}
+if (!require("plotly")) {
+   install.packages("plotly")
+   library(plotly)
+}
+if (!require("gapminder")) {
+   install.packages("gapminder")
+   library(gapminder)
+}
+if (!require("png")) {
+    install.packages("png")             # Install png package
+    library("png")
+}
+if (!require("RCurl")) {
+    install.packages("RCurl")             # Install RCurl package
+    library("RCurl")
+}
+if (!require("colourpicker")) {
+    install.packages("colourpicker")              
+    library("colourpicker")
+}
+if (!require("gganimate")) {
+    install.packages("gganimate")              
+    library("gganimate")
+}
+if (!require("gifski")) {
+    install.packages("gifski")              
+    library("gifski")
+}
+if (!require("magick")) {
+    install.packages("magick")              
+    library("magick")
+}
+if (!require("grDevices")) {
+    install.packages("grDevices")              
+    library("grDevices")
+}
+if (!require("jpeg")) {
+    install.packages("jpeg")              
+    library("jpeg")
+}
+if (!require("VGAM")) {
+    install.packages("VGAM")              
+    library("VGAM")
+}
+if (!require("MASS")) {
+    install.packages("MASS")              
+    library("MASS")
+}
+if (!require("nnet")) {
+    install.packages("nnet")              
+    library("nnet")
+}
+if (!require("cluster")) {
+    install.packages("cluster")              
+    library("cluster")
+}
+
+knitr::opts_knit$set(root.dir = "C:\\STA490\\w05")
+knitr::opts_chunk$set(echo = TRUE,       
+                      warning = FALSE,   
+                      result = TRUE,   
+                      message = FALSE,
+                      comment = NA)
+```
+
+
+# Introduction 
+
+The two core plotting and graphics packages in the base R are:
+
+* **graphics**: contains plotting functions for the “base” graphing systems, including plot, hist, boxplot, and many others.
+
+* **grDevices**: contains all the code implementing the various graphics devices, including X11, PDF, PostScript, PNG, etc.
+
+The `grDevices` package contains the functionality for sending plots to various output devices. The `graphics` package contains the code for actually constructing and annotating plots.
+
+In this note, we focus on using the base plotting system to create graphics on the screen device.
+
+
+# Working Data -iris
+
+
+```{r echo=FALSE}
+DT::datatable(iris, fillContainer = FALSE, options = list(pageLength = 10))
+```
+
+<font color = "darkred"><b>Objectives</b></font>: Identify meaningful patterns and make visual representations
+
+* What information does the data set have?
+* How to find the information of interest? 
+  - descriptive? 
+  - algorithm-based? 
+  - model-based?
+* Too many variables or too many data points?
+* What form of visualization to use?
+* What visual design? Single pattern or multiple patterns?
+
+
+# Base Graphics
+
+Base graphics are used most commonly and are a very powerful system for creating data graphics. There are two phases to creating a base plot:
+
+* Initializing a new plot.
+
+* Annotating (adding to) an existing plot.
+
+For example, calling the base plot functions `plot(x, y)` or `hist(x)` will launch a graphics device (if one is not already open) and draw a new plot on the device. The based plot function has many arguments, letting us set the title, x-axis label, y-axis label, etc.
+
+The base graphics system has many global parameters that can be set and tweaked. These parameters are documented in `?par` and are used to control the global behavior of plots, such as the margins, axis orientation, and other details. 
+
+# Simple Base Graphics
+
+This section explains how to use the base plotting functions to make basic statistical graphics.
+
+## Histogram
+
+Here is an example of a simple histogram made using the `hist()` function in the graphics package. If we run this code and our graphics window is not already open, it should open once you call the `hist()` function.
+
+```{r, fig.align='center', fig.cap="Figure 1. Sepal width of iris"}
+## Draw a new plot on the screen device
+hist(iris$Sepal.Length,
+     xlab = "Sepal Length",
+     ylab = "Counts",
+     main = "Frequency distribution of sepal length") 
+```
+
+
+## Boxplot
+
+Boxplots can be made in R using the `boxplot()` function, which takes as its first argument a formula. The formula has a form of `y-axis ~ x-axis`. Anytime you see a `~` in R, it’s a formula. Here, we are plotting the sepal length of iris flowers and the right-hand side of `~` the Species.
+
+
+```{r, fig.align='center', fig.cap="Box plot of sepal length by species"}
+boxplot(Sepal.Length ~ Species, data = iris, xlab = "Species", ylab = "Sepal Length")
+```
+
+Each boxplot shows the median, 25th, and 75th percentiles of the data (the “box”), as well as +/- 1.5 times the interquartile range (IQR) of the data (the “whiskers”). Any data points beyond 1.5 times the IQR of the data are indicated separately with circles.
+
+We can see that Virginica has an outlier.
+
+## Scatterplot
+
+Here is a simple scatter-plot made with the `plot()` function.
+
+```{r, fig.align='center', fig.cap="Scatter plot of sepal length and sepal width"}
+plot(iris$Sepal.Length, iris$Sepal.Width, 
+     xlab = "sepal length",
+     ylab = "sepal width",
+     main = " ")
+```
+
+Generally, the `plot()` function takes two vectors of numbers: one for the x-axis coordinates and one for the y-axis coordinates. However, `plot()` is a generic function in R, which means its behavior can change depending on what kinds of data are passed to the function. 
+
+One thing to note here is that we have provided labels for the x- and the y-axis and title as well. If they were not specified, the plot function will provide this information automatically using the names of the variables.
+
+# Some Important Base Graphics Parameters
+
+Many base plotting functions share a set of global parameters. Here are a few key ones.
+
+* `pch`: the plotting symbol (default is an open circle).
+* `lty`: the line type (default is a solid line), can be dashed, dotted, etc.
+* `lwd`: the line width, specified as an integer multiple.
+* `col`: the plotting color, specified as a number, string, or hex code; the colors() function gives you a vector of colors by name.
+* `xlab`: character string for the x-axis label.
+* `ylab`: character string for the y-axis label.
+
+The `par()` function is used to specify the global graphics parameters that affect all plots in an R session. These parameters can be overridden when they are specified as arguments to specific plotting functions.
+
+* `las`: the orientation of the axis labels on the plot.
+* `bg`: the background color.
+* `mar`: the margin size.
+* `oma`: the outer margin size (default is 0 for all sides).
+* `mfrow`: number of plots per row, column (plots are filled row-wise).
+* `mfcol`: number of plots per row, column (plots are filled column-wise).
+
+
+We can see the default values for global graphics parameters by calling the `par()` function and passing the name of the parameter in quotes.
+
+```{r}
+par("lty")
+par("col")
+par("pch")
+```
+
+Here are some more default values for global graphics parameters.
+
+```{r}
+par("bg")
+par("mar")
+par("mfrow")
+```
+
+For the most part, we usually don’t have to modify these when making quick plots. However, we might need to tweak them for finalizing finished plots.
+
+
+# Base Plotting Functions
+
+The most basic base plotting function is `plot()`. The `plot()` function makes a scatter-plot, or other types of plot depending on the class of the object being plotted. Calling `plot()` will draw a plot on the screen device (and open the screen device if not already open). After that, annotation functions can be called to add to the already-made plot.
+
+Some key annotation functions are
+
+* `lines()`: add lines to a plot, given a vector of x values and a corresponding vector of y values (or a 2-column matrix); this function just connects the dots
+* `points()`: add points to a plot
+* `text()`: add text labels to a plot using specified x, y coordinates
+* `title()`: add annotations to x, y-axis labels, title, subtitle, outer margin
+* `mtext()`: add arbitrary text to the margins (inner or outer) of the plot
+* `axis()`: adding axis ticks/labels
+
+Here’s an example of creating a base plot and adding some annotation. First we make the plot with the `plot()` function and then add a title to the top of the plot with the `title()` function.
+
+```{r, fig.align='center', fig.cap="Base plot with annotation: Iris"}
+## Make the initial plot
+plot(iris$Sepal.Length, iris$Sepal.Width)
+## Add a title
+title(main = "Sepal length and width of iris")  
+```
+
+
+
+Here, I start with the same plot as above (although I add the title right away using the main argument to `plot()`) and then annotate it by coloring blue the data points corresponding.
+
+
+```{r, fig.align='center'}
+sepal.length = iris$Sepal.Length
+sepal.width = iris$Sepal.Width
+species = iris$Species
+## identifying the ID of Virginica
+virginca.id = which(species=="virginica")  # value are case sensitive!
+## making scatter plot
+plot(sepal.length, sepal.width, main = "Sepal legnth vs sepal width")
+##
+points(sepal.length[virginca.id], sepal.width[virginca.id], pch = 19, col = "red")
+```
+
+The following plot colors the data points with different colors based on species. `legend()` function explains the meaning of the different colors in the plot.
+
+```{r, fig.align='center'}
+sepal.length = iris$Sepal.Length
+sepal.width = iris$Sepal.Width
+species = iris$Species
+## identifying the ID of Virginica
+virginca.id = which(species=="virginica")  # value are case sensitive!
+setosa.id = which(species=="setosa")
+versicolor.id = which(species=="versicolor")
+## making an empty plot: type = "n" ==> no point
+plot(sepal.length, sepal.width, main = "Sepal legnth vs sepal width", type = "n")
+##
+points(sepal.length[virginca.id], sepal.width[virginca.id], pch = 18, col = "red")
+points(sepal.length[setosa.id], sepal.width[setosa.id], pch = 19, col = "blue")
+points(sepal.length[versicolor.id], sepal.width[versicolor.id], pch = 20, col = "cyan")
+legend("topleft", c("virginica", "setosa", "versicolor"), 
+                  col=c("red", "blue", "cyan"),
+                  pch=c(18, 19, 20))
+```
+
+
+#  Base Plot with Regression Line
+
+It’s fairly common to make a scatterplot and then want to draw a simple linear regression line through the data. This can be done with the `abline()` function.
+
+Below, we first make the plot (as above). Then we fit a simple linear regression model using the `lm()` function. Here, we try to model Ozone as a function of Wind. Then we take the output of `lm()` and pass it to the `abline()` function which automatically takes the information from the model object and calculates the corresponding regression line.
+
+Note that in the call to `plot()` below, we set `pch = 20` to change the plotting symbol to a filled circle.
+
+```{r, fig.align='center'}
+sepal.length = iris$Sepal.Length
+sepal.width = iris$Sepal.Width
+## making a plot 
+plot(sepal.length, sepal.width, main = "Sepal legnth vs sepal width", pch = 21)
+##
+ model <- lm( sepal.width ~ sepal.length)
+ ## Draw regression line on plot
+ abline(model, lwd = 2, col = "red")
+```
+
+# Multiple Base Plots
+
+Making multiple plots side by side is a useful way to visualize many relationships between variables with static 2-D plots. Often the repetition of data across a single plot window can be a useful way to identify patterns in the data. In order to do this, the `mfrow` and `mfcol` parameters set by the `par()` function are critical.
+
+Both the `mfrow` and `mfcol` parameters take two numbers: the number of rows of plots followed by the number of columns. The multiple plots will be arranged in a matrix-like pattern. The only difference between the two parameters is that if `mfrow` is set, then the plots will be drawn row-wise; if `mfcol` is set, the plots will be drawn column-wise.
+
+In the example below, we make two plots: sepal length vs sepal width and petal length vs petal width. We set `par(mfrow = c(1, 2))`, which indicates that we have one row of plots and two columns of plots.
+
+
+```{r, fig.align='center'}
+par(mfrow = c(1, 2))
+sepal.length = iris$Sepal.Length
+sepal.width = iris$Sepal.Width
+petal.length = iris$Petal.Length
+petal.width = iris$Petal.Width
+## making a plot 
+plot(sepal.length, sepal.width, main = "Sepal legnth vs sepal width", pch = 20)
+plot(petal.length, petal.width, main = "Petal legnth vs petal width", pch = 21)
+```
+
+The example below creates three plots in a row by setting `par(mfrow = c(1, 3))`. Here we also change the plot margins with the mar parameter. The various margin parameters, like `mar`, are specified by setting a value for each side of the plot. `Side 1` is the bottom of the plot, `side 2` is the left-hand side, `side 3` is the top, and `side 4` is the right-hand side. 
+
+In the example below we also modify the outer margin via the `oma` parameter to create a little more space for the plots and to place them closer together.
+
+```{r, fig.align='center'}
+# layout of the plot
+par(mfrow = c(1, 3), 
+    mar = c(4, 4, 2, 1), 
+    oma = c(0, 0, 2, 0))
+# extract variables from the data frame
+sepal.length = iris$Sepal.Length
+sepal.width = iris$Sepal.Width
+species = iris$Species
+## identifying the ID of Virginica
+virginca.id = which(species=="virginica")  # value are case sensitive!
+setosa.id = which(species=="setosa")
+versicolor.id = which(species=="versicolor")
+## making three plots
+plot(sepal.length[virginca.id], sepal.width[virginca.id], main = "virginca")
+plot(sepal.length[setosa.id], sepal.width[setosa.id], main = "setosa")
+plot(sepal.length[versicolor.id], sepal.width[versicolor.id], main = "versicolor")
+##
+mtext("Sepal length vs width: Iris", outer = TRUE)
+```
+
+In the above example, the `mtext()` function was used to create an overall title for the panel of plots. Hence, each individual plot has a title, while the overall set of plots also has a summary title. The `mtext()` function is important for adding text annotations that aren’t specific to a single plot.
+
+Notice that the scales of the vertical axes of the three plots are not the same. To misleading visual comparison, we should make the scales of both axes the same.
+
+```{r, fig.align='center'}
+# layout of the plot
+par(mfrow = c(1, 3), 
+    mar = c(4, 4, 2, 1), 
+    oma = c(0, 0, 2, 0))
+# extract variables from the data frame
+sepal.length = iris$Sepal.Length
+sepal.width = iris$Sepal.Width
+species = iris$Species
+## identifying the ID of Virginica
+virginca.id = which(species=="virginica")  # value are case sensitive!
+setosa.id = which(species=="setosa")
+versicolor.id = which(species=="versicolor")
+## making three plots
+plot(sepal.length[virginca.id], sepal.width[virginca.id], xlim=c(4,8), ylim=c(2, 4.5), main = "virginca")
+plot(sepal.length[setosa.id], sepal.width[setosa.id], xlim=c(4,8), ylim=c(2, 4.5),main = "setosa")
+plot(sepal.length[versicolor.id], sepal.width[versicolor.id], xlim=c(4,8), ylim=c(2, 4.5),main = "versicolor")
+##
+mtext("Sepal length vs width: Iris", outer = TRUE)
+```
+
+We now can visualize the mean sepal width and sepal length among the species.
+
+# Controlling Point Size and Transparency
+
+we use `cex=` and `alpha=` to control the point size according to the value of a variable and the level of transparency of the point.
+
+```{r, fig.align='center'}
+sepal.length = iris$Sepal.Length
+sepal.width = iris$Sepal.Width
+size.petal = iris$Petal.Width
+species = iris$Species
+## identifying the ID of Virginica
+virginca.id = which(species=="virginica")  # value are case sensitive!
+setosa.id = which(species=="setosa")
+versicolor.id = which(species=="versicolor")
+## color code
+col.code = c(alpha("red",0.5),alpha("blue",0.5),alpha("cyan",0.5))
+## making an empty plot: type = "n" ==> no point
+plot(sepal.length, sepal.width, main = "Sepal legnth vs sepal width", type = "n")
+## change the point size based on their average of sepal length and width
+points(sepal.length[virginca.id], sepal.width[virginca.id], 
+       pch = 19, col = col.code[1], cex = size.petal[virginca.id])
+points(sepal.length[setosa.id], sepal.width[setosa.id], 
+       pch = 19, col = col.code[2], cex = size.petal[setosa.id])
+points(sepal.length[versicolor.id], sepal.width[versicolor.id], 
+       pch = 19, col = col.code[3], cex = size.petal[versicolor.id])
+legend("topleft", c("virginica", "setosa", "versicolor"), 
+                  col=col.code,
+                  pch=c(19, 19, 19))
+```
+
+# Annotations
+
+We add annotations to the base R plot. The annotations could be plain texts, images, and mathematical expressions.
+
+```{r}
+
+iris.img <- "https://pengdsci.github.io/STA553VIZ/w03/img/iris.jpeg"
+my.iris <- readJPEG(getURLContent(iris.img))
+raster.iris <- as.raster(my.iris) 
+# Use the code in the precious section
+sepal.length = iris$Sepal.Length
+sepal.width = iris$Sepal.Width
+size.petal = iris$Petal.Width
+species = iris$Species
+## identifying the ID of Virginica
+virginca.id = which(species=="virginica")  # value are case sensitive!
+setosa.id = which(species=="setosa")
+versicolor.id = which(species=="versicolor")
+## color code
+#  col.code = c(alpha("red",0.5),alpha("blue",0.5),alpha("cyan",0.5))
+## making an empty plot: type = "n" ==> no point
+plot(sepal.length, sepal.width, main = "Sepal legnth vs sepal width", type = "n")
+## change the point size based on their average of sepal length and width
+points(sepal.length[virginca.id], sepal.width[virginca.id], 
+       pch = 19, col = "purple", cex = size.petal[virginca.id], alpha = 0.6)
+points(sepal.length[setosa.id], sepal.width[setosa.id], 
+       pch = 19, col = "navy", cex = size.petal[setosa.id], alpha = 0.6)
+points(sepal.length[versicolor.id], sepal.width[versicolor.id], 
+       pch = 19, col = "cyan", cex = size.petal[versicolor.id], alpha = 0.6)
+legend("topleft", c("virginica", "setosa", "versicolor"), 
+                  col=c("purple", "navy", "cyan"),
+                  pch=c(19, 19, 19))
+## various annotations
+#specify the position of the image through bottom-left and top-right coords
+rasterImage(raster.iris,6,3.5,7,4.4)
+text(7.25, 2.25, "The size is proportional to petal length", col = "purple", cex = 0.5)
+```
+
+
+# What Story To Tell?
+
+We have discussed various graphic functions and techniques in base R to create graphic representations of data. To conclude this note, let's look at what information general audience might be interested in.
+
+## Relationship between variables?
+
+```{r fig.align='center', fig.width=7, fig.height=7, fig.cap="Pair-wise Scatter Plot of Sizes of Iris"}
+pairs(iris[, -5])
+```
+
+## Distribution of variables?
+
+
+
+```{r fig.align='center', fig.width=7, fig.height=7, fig.cap="Comparisons of distributions"}
+## Data Partition
+Sepal.L.set = iris$Sepal.Length[which(iris$Species=="setosa")]
+Sepal.L.ver = iris$Sepal.Length[which(iris$Species=="versicolor")]
+Sepal.L.vir = iris$Sepal.Length[which(iris$Species=="virginica")]
+#
+Sepal.W.set = iris$Sepal.Width[which(iris$Species=="setosa")]
+Sepal.W.ver = iris$Sepal.Width[which(iris$Species=="versicolor")]
+Sepal.W.vir = iris$Sepal.Width[which(iris$Species=="virginica")]
+#
+Petal.L.set = iris$Petal.Length[which(iris$Species=="setosa")]
+Petal.L.ver = iris$Petal.Length[which(iris$Species=="versicolor")]
+Petal.L.vir = iris$Petal.Length[which(iris$Species=="virginica")]
+#
+Petal.W.set = iris$Petal.Width[which(iris$Species=="setosa")]
+Petal.W.ver = iris$Petal.Width[which(iris$Species=="versicolor")]
+Petal.W.vir = iris$Petal.Width[which(iris$Species=="virginica")]
+###
+par(mfrow=c(2,2))
+###
+##########################   plot #1: 
+plot(density(Sepal.L.set), col="brown4", lty=1, lwd=2,  xlim=c(3,9), ylim=c(0,1.8), xlab="Sepal Length", main="Distributions Sepal Length")
+lines(density(Sepal.L.ver), col="blue", lty=1, lwd=2)
+lines(density(Sepal.L.vir), col="darkcyan", lty=1, lwd=2)
+legend("topright", c("setosa", "versicolor","virginica"),
+       col=c("brown4","blue","darkcyan"), lty=c(1,1,1),
+       lwd=c(1,1,1), bty="n", cex=0.7)
+##
+##########################   plot #1: 
+plot(density(Sepal.W.set), col="brown4", lty=1, lwd=2,  xlim=c(1,5), ylim=c(0,2), xlab="Sepal Width", main="Distributions Sepal Width")
+lines(density(Sepal.W.ver), col="blue", lty=1, lwd=2)
+lines(density(Sepal.W.vir), col="darkcyan", lty=1, lwd=2)
+legend("topright", c("setosa", "versicolor","virginica"),
+       col=c("brown4","blue","darkcyan"), lty=c(1,1,1),
+       lwd=c(1,1,1), bty="n", cex=0.7)
+##
+##########################   plot #1: 
+plot(density(Petal.L.set), col="brown4", lty=1, lwd=2,  xlim=c(1,8), ylim=c(0,2.8), xlab="Petal Length", main="Distributions Petal Length")
+lines(density(Petal.L.ver), col="blue", lty=1, lwd=2)
+lines(density(Petal.L.vir), col="darkcyan", lty=1, lwd=2)
+legend("topright", c("setosa", "versicolor","virginica"),
+       col=c("brown4","blue","darkcyan"), lty=c(1,1,1),
+       lwd=c(1,1,1), bty="n", cex=0.7)
+##
+##########################   plot #1: 
+plot(density(Petal.W.set), col="brown4", lty=1, lwd=2,  xlim=c(0,3), ylim=c(0,8), xlab="Petal Width", main="Distributions Petal Width")
+lines(density(Petal.W.ver), col="blue", lty=1, lwd=2)
+lines(density(Petal.W.vir), col="darkcyan", lty=1, lwd=2)
+legend("topright", c("setosa", "versicolor","virginica"),
+       col=c("brown4","blue","darkcyan"), lty=c(1,1,1),
+       lwd=c(1,1,1), bty="n", cex=0.7)
+```
+
+
+
+## Modeling - Classification and Regression?
+
+When building regression models, one of the issues is the potential collinearity. 
+
+$\pi_1 = Pr[Y = \text{setosa}]$, $\pi_2 = Pr[Y = \text{versicolor}]$, and $\pi_1 = Pr[Y = \text{virginica}]$. The well known baseline logit model is defined to be the following system of two odds regression models
+
+$$
+\log(\pi_2/ \pi_1) = \alpha_0 + \alpha_1x_1 + \cdots + \alpha_kx_k
+$$
+$$
+\log(\pi_3/ \pi_1) = \beta_0 + \beta_1x_1 + \cdots + \beta_kx_k
+$$
+Note that $\pi_1 + \pi_2 + \pi_3 = 1$. Solve for $\pi_1, \pi_2$, and $\pi_3$, we have 
+
+$$
+\pi_1 = \frac{1}{1+\exp(\alpha_0 + \alpha_1x_1 + \cdots + \alpha_kx_k) + \exp(\beta_0 + \beta_1x_1 + \cdots + \beta_kx_k)}
+$$
+
+$$
+\pi_2 = \frac{\exp(\alpha_0 + \alpha_1x_1 + \cdots + \alpha_kx_k)}{1+\exp(\alpha_0 + \alpha_1x_1 + \cdots + \alpha_kx_k) + \exp(\beta_0 + \beta_1x_1 + \cdots + \beta_kx_k)}
+$$
+
+$$
+\pi_3 = \frac{\exp(\beta_0 + \beta_1x_1 + \cdots + \beta_kx_k)}{1+\exp(\alpha_0 + \alpha_1x_1 + \cdots + \alpha_kx_k) + \exp(\beta_0 + \beta_1x_1 + \cdots + \beta_kx_k)}
+$$
+
+
+
+```{r echo=FALSE, message = FALSE}
+# Fit multinomial logistic regression model 
+fit <- multinom(Species ~  Sepal.Length 
+                  + Sepal.Width
+                  + Petal.Length 
+                  + Petal.Width , 
+                  data = iris, trace = FALSE)
+kable(coefficients(fit))
+
+```
+
+
+How to interpret the results? Can we make a visual representation of the resulting model? How?
+
+The following is one example of representation of how individual features impact membership prediction (classification).
+
+```{r}
+setosa = summary(iris[which(iris$Species=="setosa"),])
+versicolor = summary(iris[which(iris$Species=="versicolor"),])
+virginica = summary(iris[which(iris$Species=="virginica"),])
+list(setosa = setosa, versicolor = versicolor, virginica = virginica)
+```
+
+Next, we show the relationship between `Sepal.Length` and the classification probabilities $\pi_1, \pi_2$ and $\pi_3$ by fixing the values of other variables at their corresponding means.
+
+```{r fig.align='center', fig.width=5, fig.height=5}
+SepalLength = seq(4, 9, length=50)
+pi01 = 1/(1+exp(18.69 - 5.46*SepalLength - 8.71*3 + 14.25*4 - 3.10*1)+ exp(-23.84  - 7.92**SepalLength   - 15.37*3 + 23.66*4  + 15.14*1 ))
+##
+pi02 = exp(18.69 - 5.46*SepalLength - 8.71*3 + 14.25*4 - 3.10*1 )/(1+exp(18.69 - 5.46*SepalLength - 8.71*3 + 14.25*4 - 3.10*1 )+ exp(-23.84 - 7.92**SepalLength  - 15.37*3 +23.66*4 + 15.14*1  ))
+##
+##
+pi03 = exp(-23.84  - 7.92**SepalLength - 15.37*3 +23.66*4 + 15.14*1 )/(1+exp(18.69 - 5.46*SepalLength - 8.71*3 + 14.25*4 - 3.10*1)+ exp(-23.84  - 7.92**SepalLength - 15.37*3 +23.66*4 + 15.14*1 ))
+##
+#par(mfrow=c(1,3))
+plot(SepalLength, pi01, main="Setosa",
+     type = "l",
+     ylim = c(0,1),
+     xlab = "Sepal Length",
+     ylab = "Classification Probability",
+     col = "blue",
+     lwd = 2)
+lines(SepalLength, pi02, main = "Versicolor", ylab="Classification Probability",
+     type = "l", col = "purple", lwd = 2)
+lines(SepalLength, pi03, main = "Virginica",  ylab="Classification Probability",
+     type="l", col = "brown4", lwd = 2)
+abline(v=8.51, lty = 2)
+points(8.51, 0.495, pch=19, col = "darkred", dex = 1.5)
+text(8, 0.495, "(8.51, 0.495)", cex = 0.6)
+legend("left", c("Setosa", "Versicolor", "Virginica"), lwd=rep(2,3),
+       col=c("blue", "purple", "brown"), lty = rep(1,3), cex=0.9, bty="n")
+```
+The above three figures show how `sepal length` is associated with the three classification probabilities. For example, among setosa, under the same conditions (i.e., sepal width, petal length, and petal width are the same), as sepal length increases, the classification probability also increases. The opposite pattern is observed among versicolor iris flowers. The sepal length and the classification probability are not associated.
+
+For all iris flowers with Sepal Width 3, Petal Length 4, and Petal Width 1.5, when Sepal Length < 8.51, $P(\text{Versicolor}) > P(\text{Setosa})$ meaning that it is more likely to be `Versicolor iris`. Otherwise, it is more likely to be `setosa`. Sepal length does not have *predictive power* for `virginica`.
+
+We can also look at the relationship between the classification probability and other numerical variables in the data set in a similar way.
+
+
+## Clustering?
+
+Another interesting problem we may explore is the see whether there are some clusters based on the four numerical variables. There are many clustering algorithms for practitioners. For illustrative purposes, we use the popular k-means algorithm in the following example.
+
+
+```{r}
+tot.withinss <- vector(mode="character", length=10)
+for (i in 1:10){
+  irisCluster <- kmeans(iris[,1:4], center=i, nstart=20)
+  tot.withinss[i] <- irisCluster$tot.withinss
+}
+plot(1:10, tot.withinss, main="Elbow Plot for Optimal Cluster Determination",
+     type="b", pch=19)
+```
+
+
+```{r}
+irisCluster <- kmeans(iris[,1:4], center=3, nstart=20)
+irisCluster
+```
+
+```{r}
+clusplot(iris, irisCluster$cluster, color=T, shade=T, labels=0, lines=0)
+```
+
+
+
+
+
