@@ -86,30 +86,18 @@ a:active {
 </style>
 
 ```{r setup, include=FALSE}
-if (!require("tidyverse")) {
-   install.packages("tidyverse")
-   library(tidyverse)
-}
-if (!require("knitr")) {
-   install.packages("knitr")
-   library(knitr)
-}
-if (!require("plotly")) {
-   install.packages("plotly")
-   library(plotly)
-}
-if (!require("gapminder")) {
-   install.packages("gapminder")
-   library(gapminder)
-}
-if (!require("colourpicker")) {
-    install.packages("colourpicker")              
+install.packages("ggplot2")    
+library("ggplot2")
+   library("knitr")
+
+   library("plotly")
+
+   library("gapminder")
+             
     library("colourpicker")
-}
-if (!require("gganimate")) {
-    install.packages("gganimate")              
+     
     library("gganimate")
-}
+
 # knitr::opts_knit$set(root.dir = "C:\\STA490\\w05")
 ##
 knitr::opts_chunk$set(echo = TRUE,       

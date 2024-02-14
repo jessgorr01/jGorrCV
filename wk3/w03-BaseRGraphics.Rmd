@@ -88,80 +88,50 @@ a:active {
 ```{r setup, include=FALSE}
 # code chunk specifies whether the R code, warnings, and output 
 # will be included in the output files.
-if (!require("tidyverse")) {
-   install.packages("tidyverse")
-   library(tidyverse)
-}
-if (!require("knitr")) {
-   install.packages("knitr")
-   library(knitr)
-}
-if (!require("cowplot")) {
-   install.packages("cowplot")
-   library(cowplot)
-}
-if (!require("latex2exp")) {
-   install.packages("latex2exp")
-   library(latex2exp)
-}
-if (!require("plotly")) {
-   install.packages("plotly")
-   library(plotly)
-}
-if (!require("gapminder")) {
-   install.packages("gapminder")
-   library(gapminder)
-}
-if (!require("png")) {
-    install.packages("png")             # Install png package
-    library("png")
-}
-if (!require("RCurl")) {
-    install.packages("RCurl")             # Install RCurl package
-    library("RCurl")
-}
-if (!require("colourpicker")) {
-    install.packages("colourpicker")              
-    library("colourpicker")
-}
-if (!require("gganimate")) {
-    install.packages("gganimate")              
-    library("gganimate")
-}
-if (!require("gifski")) {
-    install.packages("gifski")              
-    library("gifski")
-}
-if (!require("magick")) {
-    install.packages("magick")              
-    library("magick")
-}
-if (!require("grDevices")) {
-    install.packages("grDevices")              
-    library("grDevices")
-}
-if (!require("jpeg")) {
-    install.packages("jpeg")              
-    library("jpeg")
-}
-if (!require("VGAM")) {
-    install.packages("VGAM")              
-    library("VGAM")
-}
-if (!require("MASS")) {
-    install.packages("MASS")              
-    library("MASS")
-}
-if (!require("nnet")) {
-    install.packages("nnet")              
-    library("nnet")
-}
-if (!require("cluster")) {
-    install.packages("cluster")              
-    library("cluster")
-}
+if(!require(tidyverse)) 
+  install.packages("tidyverse",repos = "http://cran.us.r-project.org")
 
-knitr::opts_knit$set(root.dir = "C:\\STA490\\w05")
+if(!require(knitr)) install.packages("knitr",repos = "http://cran.us.r-project.org")
+
+if(!require(ggplot2)) install.packages("ggplot2",repos = "http://cran.us.r-project.org")
+
+if(!require(cowplot)) install.packages("cowplot",repos = "http://cran.us.r-project.org")
+
+if(!require(latex2exp)) install.packages("latex2exp",repos = "http://cran.us.r-project.org")
+
+if(!require(plotly)) install.packages("plotly",repos = "http://cran.us.r-project.org")
+
+if(!require(gapminder)) install.packages("gapminder",repos = "http://cran.us.r-project.org")
+
+
+if(!require(png)) install.packages("png",repos = "http://cran.us.r-project.org")
+
+if(!require(RCurl)) install.packages("RCurl",repos = "http://cran.us.r-project.org")
+
+if(!require(colourpicker)) install.packages("colourpicker",repos = "http://cran.us.r-project.org")
+
+if(!require(gganimate)) install.packages("gganimate",repos = "http://cran.us.r-project.org")
+
+
+if(!require(gifski)) install.packages("gifski",repos = "http://cran.us.r-project.org")
+
+if(!require(magick)) install.packages("magick",repos = "http://cran.us.r-project.org")
+
+
+if(!require(grDevices)) install.packages("grDevices",repos = "http://cran.us.r-project.org")
+
+if(!require(jpeg)) install.packages("jpeg",repos = "http://cran.us.r-project.org")
+
+if(!require(VGAM)) install.packages("VGAM",repos = "http://cran.us.r-project.org")
+
+
+if(!require(MASS)) install.packages("MASS",repos = "http://cran.us.r-project.org")
+
+if(!require(nnet)) install.packages("nnet",repos = "http://cran.us.r-project.org")
+
+
+if(!require(cluster)) install.packages("cluster",repos = "http://cran.us.r-project.org")
+
 knitr::opts_chunk$set(echo = TRUE,       
                       warning = FALSE,   
                       result = TRUE,   
@@ -456,6 +426,7 @@ We now can visualize the mean sepal width and sepal length among the species.
 we use `cex=` and `alpha=` to control the point size according to the value of a variable and the level of transparency of the point.
 
 ```{r, fig.align='center'}
+install.packages("ggplot2")
 sepal.length = iris$Sepal.Length
 sepal.width = iris$Sepal.Width
 size.petal = iris$Petal.Width

@@ -1,0 +1,225 @@
+<style type="text/css">
+
+/* Table of content - navigation */
+div#TOC li {
+    list-style:none;
+    background-color:lightgray;
+    background-image:none;
+    background-repeat:none;
+    background-position:0;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #780c0c;
+}
+
+
+/* Title fonts */
+h1.title {
+  font-size: 24px;
+  color: darkblue;
+  text-align: center;
+  font-family: Arial, Helvetica, sans-serif;
+  font-variant-caps: normal;
+}
+h4.author { 
+  font-size: 18px;
+  font-family: Arial, Helvetica, sans-serif;
+  color: navy;
+  text-align: center;
+}
+h4.date { 
+  font-size: 18px;
+  font-family: Arial, Helvetica, sans-serif;
+  color: darkblue;
+  text-align: center;
+}
+
+/* Section headers */
+h1 {
+    font-size: 22px;
+    font-family: "Times New Roman", Times, serif;
+    color: darkred;
+    text-align: left;
+}
+
+h2 {
+    font-size: 18px;
+    font-family: "Times New Roman", Times, serif;
+    color: navy;
+    text-align: left;
+}
+
+h3 { 
+    font-size: 15px;
+    font-family: "Times New Roman", Times, serif;
+    color: darkred;
+    text-align: left;
+}
+
+h4 {
+    font-size: 18px;
+    font-family: "Times New Roman", Times, serif;
+    color: darkred;
+    text-align: left;
+}
+
+/* Decoration of hyperlinks  */
+
+/* unvisited link */
+a:link {
+  color: green;
+}
+
+/* visited link */
+a:visited {
+  color: purple;
+}
+
+/* mouse over link */
+a:hover {
+  color: red;
+}
+
+/* selected link */
+a:active {
+  color: yellow;
+}
+</style>
+
+```{r setup, include=FALSE}
+# code chunk specifies whether the R code, warnings, and output 
+# will be included in the output files.
+if (!require("tidyverse")) {
+   install.packages("tidyverse")
+   library(tidyverse)
+}
+if (!require("knitr")) {
+   install.packages("knitr")
+   library(knitr)
+}
+if (!require("cowplot")) {
+   install.packages("cowplot")
+   library(cowplot)
+}
+if (!require("latex2exp")) {
+   install.packages("latex2exp")
+   library(latex2exp)
+}
+if (!require("plotly")) {
+   install.packages("plotly")
+   library(plotly)
+}
+if (!require("gapminder")) {
+   install.packages("gapminder")
+   library(gapminder)
+}
+if (!require("png")) {
+    install.packages("png")             # Install png package
+    library("png")
+}
+if (!require("RCurl")) {
+    install.packages("RCurl")             # Install RCurl package
+    library("RCurl")
+}
+if (!require("colourpicker")) {
+    install.packages("colourpicker")              
+    library("colourpicker")
+}
+if (!require("gganimate")) {
+    install.packages("gganimate")              
+    library("gganimate")
+}
+if (!require("gifski")) {
+    install.packages("gifski")              
+    library("gifski")
+}
+if (!require("magick")) {
+    install.packages("magick")              
+    library("magick")
+}
+if (!require("grDevices")) {
+    install.packages("grDevices")              
+    library("grDevices")
+}
+if (!require("jpeg")) {
+    install.packages("jpeg")              
+    library("jpeg")
+}
+if (!require("VGAM")) {
+    install.packages("VGAM")              
+    library("VGAM")
+}
+if (!require("MASS")) {
+    install.packages("MASS")              
+    library("MASS")
+}
+if (!require("nnet")) {
+    install.packages("nnet")              
+    library("nnet")
+}
+if (!require("cluster")) {
+    install.packages("cluster")              
+    library("cluster")
+}
+
+# knitr::opts_knit$set(root.dir = "C:\\STA490\\w05")
+knitr::opts_chunk$set(echo = FALSE,       
+                      warning = FALSE,   
+                      result = TRUE,   
+                      message = FALSE,
+                      comment = NA)
+x <- getURL("https://jessgorr01.github.io/jGorrCV/wk3/w03-penguins.csv")
+data <- read.csv(text = x)
+```
+
+
+# Jessica Gorr
+
+Base R Graphic Assignment: Scatterplot
+
+## Scatterplot
+
+Here is a simple scatter-plot made with the `plot()` function featuring the two variables Bill_length_mm and Flipper_length_mm from the penguins dataset.
+
+
+```{r}
+library(jpeg)
+iris.img <- "https://jessgorr01.github.io/jGorrCV/wk3/penguin.jpeg"
+my.iris <- readJPEG(getURLContent(iris.img))
+raster.iris <- as.raster(my.iris) 
+
+
+# Use the code in the precious section
+flipper.length = data$flipper_length_mm
+Bill.length = data$bill_length_mm
+species = data$species
+size.body = data$body_mass_g/10000
+## identifying the ID of Virginica
+Adelie.id = which(species=="Adelie")  # value are case sensitive!
+Gentoo.id = which(species=="Gentoo")
+Chinstrap.id = which(species=="Chinstrap")
+## color code
+ #col.code = c(alpha("red",0.5),alpha("blue",0.5),alpha("cyan",0.5))
+## making an empty plot: type = "n" ==> no point
+plot(Bill.length, flipper.length, main = "Relationship of Flipper and Bill Length Amounst all Species of Penguins", type = "n",  xlab="Bill Length (mm)", ylab="Flipper Length (mm)")
+## change the point size based on their average of sepal length and width
+points(Bill.length[Adelie.id], flipper.length[Adelie.id], 
+       pch = 19, col = "purple", cex = size.body[Adelie.id])
+points(Bill.length[Gentoo.id], flipper.length[Gentoo.id], 
+       pch = 18, col = "navy", cex = size.body[Gentoo.id])
+points(Bill.length[Chinstrap.id], flipper.length[Chinstrap.id], 
+       pch = 17, col = "red", cex = size.body[Chinstrap.id])
+legend("topleft", c("Adelie", "Gentoo", "Chinstrap"), 
+                  col=c("purple", "navy", "red"),
+                  pch=c(19, 18, 17))
+
+## various annotations
+#specify the position of the image through bottom-left and top-right coords
+rasterImage(my.iris, 
+            xleft=37, xright=41, 
+            ybottom=210.3, ytop=240)
+
+```
+
+When looking at the graph between flipper length and bill length there seems to be a strong positive linear relationship between the two variables. This is most evident with the Gentoo species, where the flipper and bill length are the biggest. With the other two species, Adelie and Chinstrap, the relationship is less strong and can impact the overall model. If species wasn't taken into account, a regression line could possibly show a negative linear relationship. When looking at the body mass for each species, Gentoo has the largest marker, indicating that they are the largest species out of the three. This also supports the reasoning as to why the Gentoo species has the larger bill and flipper size.
+
+
