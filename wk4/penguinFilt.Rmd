@@ -1,0 +1,221 @@
+<style type="text/css">
+
+/* Table of content - navigation */
+div#TOC li {
+    list-style:none;
+    background-color:skyblue;
+    background-image:none;
+    background-repeat:none;
+    background-position:0;
+    font-family: Arial, Helvetica, sans-serif;
+    color: darkred;
+}
+
+h1.title {
+  font-size: 24px;
+  color: DarkRed;
+  text-align: center;
+}
+
+h4.author { /* Header 4 - and the author and data headers use this too  */
+    font-size: 18px;
+  font-family: "Times New Roman", Times, serif;
+  color: DarkRed;
+  text-align: center;
+}
+h4.date { /* Header 4 - and the author and data headers use this too  */
+  font-size: 18px;
+  font-family: "Times New Roman", Times, serif;
+  color: DarkBlue;
+  text-align: center;
+}
+h1 { /* Header 3 - and the author and data headers use this too  */
+    font-size: 22px;
+    font-family: "Times New Roman", Times, serif;
+    color: darkred;
+    text-align: center;
+}
+h2 { /* Header 3 - and the author and data headers use this too  */
+    font-size: 18px;
+    font-family: "Times New Roman", Times, serif;
+    color: navy;
+    text-align: left;
+}
+
+h3 { /* Header 3 - and the author and data headers use this too  */
+    font-size: 15px;
+    font-family: "Times New Roman", Times, serif;
+    color: navy;
+    text-align: left;
+}
+
+h4 { /* Header 4 - and the author and data headers use this too  */
+    font-size: 18px;
+    font-family: "Times New Roman", Times, serif;
+    color: darkred;
+    text-align: left;
+}
+</style>
+
+
+```{r setup, include=FALSE}
+# code chunk specifies whether the R code, warnings, and output 
+# will be included in the output files.
+if (!require("tidyverse")) {
+   install.packages("tidyverse")
+   library(tidyverse)
+}
+if (!require("knitr")) {
+   install.packages("knitr")
+   library(knitr)
+}
+if (!require("cowplot")) {
+   install.packages("cowplot")
+   library(cowplot)
+}
+if (!require("latex2exp")) {
+   install.packages("latex2exp")
+   library(latex2exp)
+}
+if (!require("plotly")) {
+   install.packages("plotly")
+   library(plotly)
+}
+if (!require("gapminder")) {
+   install.packages("gapminder")
+   library(gapminder)
+}
+if (!require("png")) {
+    install.packages("png")             # Install png package
+    library("png")
+}
+if (!require("RCurl")) {
+    install.packages("RCurl")             # Install RCurl package
+    library("RCurl")
+}
+if (!require("colourpicker")) {
+    install.packages("colourpicker")              
+    library("colourpicker")
+}
+if (!require("gganimate")) {
+    install.packages("gganimate")              
+    library("gganimate")
+}
+if (!require("gifski")) {
+    install.packages("gifski")              
+    library("gifski")
+}
+if (!require("magick")) {
+    install.packages("magick")              
+    library("magick")
+}
+if (!require("grDevices")) {
+    install.packages("grDevices")              
+    library("grDevices")
+}
+if (!require("jpeg")) {
+    install.packages("jpeg")              
+    library("jpeg")
+}
+if (!require("VGAM")) {
+    install.packages("VGAM")              
+    library("VGAM")
+}
+if (!require("MASS")) {
+    install.packages("MASS")              
+    library("MASS")
+}
+if (!require("nnet")) {
+    install.packages("nnet")              
+    library("nnet")
+}
+if (!require("cluster")) {
+    install.packages("cluster")              
+    library("cluster")
+}
+# knitr::opts_knit$set(root.dir = "C:/Users/75CPENG/OneDrive - West Chester University of PA/Documents")
+# knitr::opts_knit$set(root.dir = "C:\\STA490\\w05")
+
+knitr::opts_chunk$set(echo = TRUE,       
+                      warning = FALSE,   
+                      result = TRUE,   
+                      message = FALSE,
+                      comment = NA)
+
+x <- getURL("https://jessgorr01.github.io/jGorrCV/wk3/w03-penguins.csv")
+data <- read.csv(text = x)
+```
+
+
+# Jessica Gorr
+
+Data Management Assignment: Penguin Dataset
+
+## Data Management
+
+This dataset "penguin.csv" contains multiple variables about penguins such as: species, location, and various measurement. Not all the data is complete so before analyzing any data, it is important to clean up and arrange the data in a useful way.
+
+The following code chunk deletes any cases that have missing values.
+```{r}
+dataCleaned <- data[complete.cases(data),]
+```
+
+The next code chunk will sort out and include only the penguins with the following conditions:
+1. Include Adelie penguins and Gentoo penguins from the Biscoe and Torgersen islands.
+2. Include only penguins with body_mass_g less than 5000 grams but more than 3500 grams.
+3. Rescale body_mass_g by dividing 4000 and rename it as BMI = body_mass_g / 4000.
+4. Exclude variables X(observation ID), sex, year, and body_mass_g from the above subset.
+
+```{r}
+
+dataFiltered <- dataCleaned %>%
+              filter((species == "Adelie" | species =="Gentoo") & (island == "Biscoe" | island == "Torgersen") )%>%
+  mutate(BMI = body_mass_g/4000)%>% 
+             filter(body_mass_g < 5000 & body_mass_g > 3500)%>%
+  dplyr::select(-X,-sex,-year,-body_mass_g)
+```
+## Scatterplot
+
+Now a simple scatter-plot made with the `plot()` function featuring the two variables Bill_length_mm and Flipper_length_mm from the penguins data set. Since the data is sub setted from the original, there are now less observations
+
+```{r}
+library(jpeg)
+pen.img <- "https://jessgorr01.github.io/jGorrCV/wk3/penguin.jpeg"
+my.pen <- readJPEG(getURLContent(pen.img))
+raster.pen <- as.raster(my.pen) 
+
+
+# Use the code in the precious section
+flipper.length = dataFiltered$flipper_length_mm
+Bill.length = dataFiltered$bill_length_mm
+species = dataFiltered$species
+size.body = dataFiltered$BMI
+## identifying the ID of penguin
+Adelie.id = which(species=="Adelie")  
+Gentoo.id = which(species=="Gentoo")
+## color code
+ #col.code = c(alpha("red",0.5),alpha("blue",0.5),alpha("cyan",0.5))
+## making an empty plot: type = "n" ==> no point
+plot(Bill.length, flipper.length, main = "Relationship of Flipper and Bill Length Amounst all Species of Penguins", type = "n",  xlab="Bill Length (mm)", ylab="Flipper Length (mm)")
+## change the point size based on their BMI
+points(Bill.length[Adelie.id], flipper.length[Adelie.id], 
+       pch = 19, col = "purple", cex = size.body[Adelie.id])
+points(Bill.length[Gentoo.id], flipper.length[Gentoo.id], 
+       pch = 18, col = "navy", cex = size.body[Gentoo.id])
+legend("topleft", c("Adelie", "Gentoo"), 
+                  col=c("purple", "navy"),
+                  pch=c(19, 18))
+
+abline(lm(flipper.length[Adelie.id]~ Bill.length[Adelie.id]), col = "purple")
+abline(lm(flipper.length[Gentoo.id]~ Bill.length[Gentoo.id]), col = "navy")
+
+
+## various annotations
+#specify the position of the image through bottom-left and top-right coords
+rasterImage(my.pen, 
+            xleft=36, xright=40, 
+            ybottom=205, ytop=222)
+
+```
+
+When looking at the graph between flipper length and bill length there seems to be a strong positive linear relationship between the two variables. When looking at each individual species, there seems to be a stronger linear relationship between bill length and flipper length among the Adelie species. This can be seem by looking at the purple regression line, compared to the blue regression line for the Gentoo species. But, The Gentoo species have larger bill and flipper length compared to the Adelie species.
