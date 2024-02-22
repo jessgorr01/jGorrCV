@@ -218,4 +218,5 @@ rasterImage(my.pen,
 
 ```
 ## Analysis
+
 When looking at the graph between flipper length and bill length there seems to be a strong positive linear relationship between the two variables. When looking at each individual species, there seems to be a stronger linear relationship between bill length and flipper length among the Adelie species. This can be seem by looking at the purple regression line, compared to the blue regression line for the Gentoo species. But, The Gentoo species have larger bill and flipper length compared to the Adelie species.
