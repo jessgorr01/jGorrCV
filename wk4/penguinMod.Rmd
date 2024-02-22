@@ -142,7 +142,7 @@ knitr::opts_chunk$set(echo = TRUE,
                       message = FALSE,
                       comment = NA)
 
-x <- getURL("https://jessgorr01.github.io/jGorrCV/wk3/w03-penguins.csv")
+x <- getURL("https://jessgorr01.github.io/jGorrCV/wk4/w03-penguins.csv")
 data <- read.csv(text = x)
 ```
 
@@ -180,9 +180,9 @@ Now a simple scatter-plot made with the `plot()` function featuring the two vari
 
 ```{r}
 library(jpeg)
-iris.img <- "https://jessgorr01.github.io/jGorrCV/wk3/penguin.jpeg"
-my.iris <- readJPEG(getURLContent(iris.img))
-raster.iris <- as.raster(my.iris) 
+pen.img <- "https://jessgorr01.github.io/jGorrCV/wk4/penguin.jpeg"
+my.pen <- readJPEG(getURLContent(pen.img))
+raster.pen <- as.raster(my.pen) 
 
 
 # Use the code in the precious section
@@ -190,14 +190,14 @@ flipper.length = dataFiltered$flipper_length_mm
 Bill.length = dataFiltered$bill_length_mm
 species = dataFiltered$species
 size.body = dataFiltered$BMI
-## identifying the ID of Virginica
-Adelie.id = which(species=="Adelie")  # value are case sensitive!
+## identifying the ID of penguin
+Adelie.id = which(species=="Adelie")  
 Gentoo.id = which(species=="Gentoo")
 ## color code
  #col.code = c(alpha("red",0.5),alpha("blue",0.5),alpha("cyan",0.5))
 ## making an empty plot: type = "n" ==> no point
 plot(Bill.length, flipper.length, main = "Relationship of Flipper and Bill Length Amounst all Species of Penguins", type = "n",  xlab="Bill Length (mm)", ylab="Flipper Length (mm)")
-## change the point size based on their average of sepal length and width
+## change the point size based on their BMI
 points(Bill.length[Adelie.id], flipper.length[Adelie.id], 
        pch = 19, col = "purple", cex = size.body[Adelie.id])
 points(Bill.length[Gentoo.id], flipper.length[Gentoo.id], 
@@ -212,8 +212,10 @@ abline(lm(flipper.length[Gentoo.id]~ Bill.length[Gentoo.id]), col = "navy")
 
 ## various annotations
 #specify the position of the image through bottom-left and top-right coords
-rasterImage(my.iris, 
-            xleft=45, xright=50, 
-            ybottom=180, ytop=200)
+rasterImage(my.pen, 
+            xleft=36, xright=40, 
+            ybottom=205, ytop=222)
 
 ```
+## Analysis
+When looking at the graph between flipper length and bill length there seems to be a strong positive linear relationship between the two variables. When looking at each individual species, there seems to be a stronger linear relationship between bill length and flipper length among the Adelie species. This can be seem by looking at the purple regression line, compared to the blue regression line for the Gentoo species. But, The Gentoo species have larger bill and flipper length compared to the Adelie species.
