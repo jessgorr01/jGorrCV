@@ -1,3 +1,13 @@
+---
+title: "GG Plot"
+author: "Jessica Gorr"
+output:
+  html_document:
+    code_folding: hide
+
+
+---
+
 <style type="text/css">
 
 /* Table of content - navigation */
@@ -68,11 +78,85 @@ if (!require("knitr")) {
    install.packages("knitr")
    library(knitr)
 }
+if (!require("cowplot")) {
+   install.packages("cowplot")
+   library(cowplot)
+}
+if (!require("latex2exp")) {
+   install.packages("latex2exp")
+   library(latex2exp)
+}
+if (!require("plotly")) {
+   install.packages("plotly")
+   library(plotly)
+}
+if (!require("gapminder")) {
+   install.packages("gapminder")
+   library(gapminder)
+}
+if (!require("png")) {
+    install.packages("png")             # Install png package
+    library("png")
+}
+if (!require("RCurl")) {
+    install.packages("RCurl")             # Install RCurl package
+    library("RCurl")
+}
+if (!require("colourpicker")) {
+    install.packages("colourpicker")              
+    library("colourpicker")
+}
+if (!require("gganimate")) {
+    install.packages("gganimate")              
+    library("gganimate")
+}
+if (!require("gifski")) {
+    install.packages("gifski")              
+    library("gifski")
+}
+if (!require("magick")) {
+    install.packages("magick")              
+    library("magick")
+}
+if (!require("grDevices")) {
+    install.packages("grDevices")              
+    library("grDevices")
+}
+if (!require("jpeg")) {
+    install.packages("jpeg")              
+    library("jpeg")
+}
+if (!require("VGAM")) {
+    install.packages("VGAM")              
+    library("VGAM")
+}
+if (!require("MASS")) {
+    install.packages("MASS")              
+    library("MASS")
+}
+if (!require("nnet")) {
+    install.packages("nnet")              
+    library("nnet")
+}
+if (!require("cluster")) {
+    install.packages("cluster")              
+    library("cluster")
+}
 # knitr::opts_knit$set(root.dir = "C:/Users/75CPENG/OneDrive - West Chester University of PA/Documents")
 # knitr::opts_knit$set(root.dir = "C:\\STA490\\w05")
 
 x <- getURL("https://jessgorr01.github.io/jGorrCV/wk5/datasets/countries_total.csv")
 country_tot <- read.csv(text = x)
+
+y <- getURL("https://jessgorr01.github.io/jGorrCV/wk5/datasets/income_per_person.csv")
+income <- read.csv(text = y)
+
+z <- getURL("https://jessgorr01.github.io/jGorrCV/wk5/datasets/life_expectancy_years.csv")
+life_ex <- read.csv(text = z)
+
+
+v <- getURL("https://jessgorr01.github.io/jGorrCV/wk5/datasets/population_total.csv")
+pop_tot <- read.csv(text = v)
 
 knitr::opts_chunk$set(echo = TRUE,       
                       warning = FALSE,   
@@ -87,7 +171,7 @@ GG Plot Assignment: World Life Expectancy
 
 ## Data Management
 
-This dataset is based on a multitude of datasets to create "World Life Expectancy". This is based on merging and selecting variables from four specific datasets "Income per Person", "Life Expectancy in Years", "Population size", and "Country Regions". These are all possible factors that can have an impact on one's life expectancy in different areas of the world.
+This dataset is based on a multitude of datasets to create "World Life Expectancy". This is based on merging and selecting variables from four specific datasets "Income per Person", "Life Expectancy in Years", "Population size", and "Country Regions". These are all possible factors that can have an impact on one's life expectancy in different areas of the world. The data was collected for the years of 1800-2018.
 
 
 The following code chunk will complete these conditions:
@@ -99,6 +183,43 @@ d. Merge LifeExpIncom with country region so that the final data set has informa
 e. Merge the previous resulting data set with population size so that the final data     set has information about income, life expectancy, population size, and country        region. 
 
 ```{r, fig.align='center'}
-ggplot(data = iris, mapping = aes(x = Petal.Width)) +
-  geom_histogram(binwidth = 0.2)
+
+##a
+long_income <- income %>%
+               pivot_longer(col= starts_with("X"),
+                            names_to = "year",
+                            values_to = "income")%>%
+                rename_at('geo', ~'country')
+
+##b
+long_life <- life_ex %>%
+               pivot_longer(col= starts_with("X"),
+                            names_to = "year",
+                            values_to = "life expectancy")%>%
+                rename_at('geo', ~'country')
+
 ```
+
+
+w
+```
+dataFiltered <- dataCleaned %>%
+              filter((species == "Adelie" | species =="Gentoo") & (island == "Biscoe" | island == "Torgersen") )%>%
+  mutate(BMI = body_mass_g/4000)%>% 
+             filter(body_mass_g < 5000 & body_mass_g > 3500)%>%
+  dplyr::select(-X,-sex,-year,-body_mass_g)
+
+##c
+LifeExpIncom <- dataCleaned %>%
+              filter((species == "Adelie" | species =="Gentoo") & (island == "Biscoe" | island == "Torgersen") )%>%
+  mutate(BMI = body_mass_g/4000)%>% 
+             filter(body_mass_g < 5000 & body_mass_g > 3500)%>%
+  dplyr::select(-X,-sex,-year,-body_mass_g)
+
+
+2000data <- dataCleaned %>%
+              filter((species == "Adelie" | species =="Gentoo") & (island == "Biscoe" | island == "Torgersen") )%>%
+  mutate(BMI = body_mass_g/4000)%>% 
+             filter(body_mass_g < 5000 & body_mass_g > 3500)%>%
+  dplyr::select(-X,-sex,-year,-body_mass_g)
+```  
