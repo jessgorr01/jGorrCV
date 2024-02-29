@@ -165,7 +165,6 @@ knitr::opts_chunk$set(echo = TRUE,
                       comment = NA)
 ```
 
-# Jessica Gorr
 
 GG Plot Assignment: World Life Expectancy
 
@@ -197,29 +196,82 @@ long_life <- life_ex %>%
                             names_to = "year",
                             values_to = "life expectancy")%>%
                 rename_at('geo', ~'country')
-
-```
-
-
-w
-```
-dataFiltered <- dataCleaned %>%
-              filter((species == "Adelie" | species =="Gentoo") & (island == "Biscoe" | island == "Torgersen") )%>%
-  mutate(BMI = body_mass_g/4000)%>% 
-             filter(body_mass_g < 5000 & body_mass_g > 3500)%>%
-  dplyr::select(-X,-sex,-year,-body_mass_g)
+               
 
 ##c
-LifeExpIncom <- dataCleaned %>%
-              filter((species == "Adelie" | species =="Gentoo") & (island == "Biscoe" | island == "Torgersen") )%>%
-  mutate(BMI = body_mass_g/4000)%>% 
-             filter(body_mass_g < 5000 & body_mass_g > 3500)%>%
-  dplyr::select(-X,-sex,-year,-body_mass_g)
+LifeExpIncom <- merge(long_income, long_life, by=c("country","year"))
+
+##d
+d <- country_tot %>%
+  rename_at('name', ~'country')
+
+combo <-full_join(LifeExpIncom, d, by="country")
+combo <- combo %>%
+  dplyr::select("income", "life expectancy","country", "region")
+##e
+long_pop <- pop_tot %>%
+               pivot_longer(col= starts_with("X"),
+                            names_to = "year",
+                            values_to = "population size")%>%
+                rename_at('geo', ~'country')
+
+cleaned <-full_join(combo, long_pop, by="country")
+cleaned_final <- cleaned %>%
+  dplyr::select("income", "life expectancy","population size", "region")
+
+library(data.table)
+
+library(readr)
+# Write to CSV file
+write_csv(cleaned_final, "C:/Users/jessg/OneDrive - West Chester University of PA/sta553/wk5/datasets/cleaned_final.csv")
+```
+The final data set has a total of 8,970,526 observations of 4 different variables. These variables are: income, life expectancy, population size,and region. The first three variables are numeric, and region is categorical.
 
 
-2000data <- dataCleaned %>%
-              filter((species == "Adelie" | species =="Gentoo") & (island == "Biscoe" | island == "Torgersen") )%>%
-  mutate(BMI = body_mass_g/4000)%>% 
-             filter(body_mass_g < 5000 & body_mass_g > 3500)%>%
-  dplyr::select(-X,-sex,-year,-body_mass_g)
-```  
+## GG Plot
+Now that all four data sets have been merged/joined to create a singular dataset, "cleaned_data", it is time to make a GG Plot scatterplot. 
+
+Before we can use the data, we must subset one more time to only account for the year 2000. The following code chunk will show this step.
+
+```{r, fig.align='center'}
+LifeExpIncom <- merge(long_income, long_life, by=c("country","year"))
+LifeFiltered<-filter(LifeExpIncom,year=='X2000')
+
+
+comboFiltered <-full_join(LifeFiltered, d, by="country")
+comboFiltered <- comboFiltered %>%
+  dplyr::select("income", "life expectancy","country", "region")
+
+popFiltered <-filter(long_pop,year=='X2000')
+
+data2000 <-full_join(comboFiltered, popFiltered, by="country")
+data2000 <- data2000 %>%
+  dplyr::select("income", "life expectancy","population size", "region")
+
+```
+The final sub-setted data set named, data200, has a total of 262 observation with four variables.
+
+
+ The code chunck below will create a vizulation using GG plot with the following conditions: 
+1). Choose any two of the three numerical variables to make a scatter plot. (income, life expectancy)
+2). Use the third numerical variable to adjust the sizes of the points (the point size is proportional to the value of the third numerical variable).
+3). Use variable region to color the points (using one of the three colorblind-friendly palettes introduced in the lecture note).
+```{r, fig.align='center'}
+names(data2000)[names(data2000)=="life expectancy"] <- "life"
+names(data2000)[names(data2000)=="population size"] <- "size"
+ggplot(data2000, aes(x =income, y = life, 
+                              color = region, 
+                              size = size)) +
+             geom_point(alpha = 0.5) + scale_color_manual(values = c("Africa" = "#FFB000", "Americas" = "#648FFF", Asia = "#785EF0", Europe = "#DC267F", Oceania = "#FE6100") ) +
+             labs(
+                 x = "Income",
+                 y = "Life Expectancy",
+                 # label for legends
+                 size = "Population:",
+                 color = "Region:",
+                 title = "Association between Income and Life Expectancy",
+                 caption = paste("Created on", Sys.Date())) +
+             theme_minimal()   # minimal theme
+```
+
+After looking at the scatter plot, there is a clear indication that life expectancy and income are correlated. When looking at the different regions, Africa by far is not living as long as the other regions. This also makes sense as it looks like this region has the fewest people making $15,000 show how much of an impact income has on life expectancy. Asia has the highest porpotion of people at ages 62 and 70. It is also clear how large of an income disparity there is amoungst those who make above $30,000. Most of the people in 2000 were making less than 30,000 gdp, but those who made between 30000and 60000 seemed to have lived the longest.
