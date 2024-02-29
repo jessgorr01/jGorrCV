@@ -248,6 +248,9 @@ data2000 <-full_join(comboFiltered, popFiltered, by="country")
 data2000 <- data2000 %>%
   dplyr::select("income", "life expectancy","population size", "region")
 
+
+# Write to CSV file
+write_csv(data2000, "C:/Users/jessg/OneDrive - West Chester University of PA/sta553/wk5/datasets/data2000.csv")
 ```
 The final sub-setted data set named, data200, has a total of 262 observation with four variables.
 
