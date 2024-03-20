@@ -1,0 +1,92 @@
+
+
+A).
+
+#library(plotly)
+df <- read.csv('POC.csv')
+# geo styling
+
+
+gas <-sample_n(df, 500)
+g <- list(      scope = 'usa',
+           projection = list(type = 'albers usa'),
+             showland = TRUE,
+            landcolor = toRGB("gray95"),
+         subunitcolor = toRGB("gray85"),
+         countrycolor = toRGB("gray85"),
+         countrywidth = 0.5,
+         subunitwidth = 0.5
+       )
+###
+fig <- plot_geo(gas, lat = ~lat, lon = ~long) %>% 
+  add_markers( text = ~paste(state, county, address, zip
+                             sep = "<br>"),
+              symbol = "circle", 
+              hoverinfo = "text")   %>% 
+  colorbar(title = "Incoming flights<br>2011.2")  %>% 
+  layout( title = 'US Gas Station Information', 
+          geo = g )
+
+fig
+
+
+
+
+
+B). Still have to change dataset name
+data_frame$Time <- as.Date(data_frame$Time)
+ 
+print("Extract year")
+# extract the year and convert to numeric format
+data_frame$year <- as.numeric(format(data_frame$Time, "%Y"))
+data_frame
+
+data_frame_mod <- filter(data_frame,year == 2023) 
+
+
+
+-----------------------------------------------------------------
+
+Crime <- na.omit(read.csv("PhillyCrimeSince2015.csv"))
+## color coding a continuous variable: 
+colAge <- cut(housing.price$HouseAge, breaks=c(0, 5, 15, max(housing.price$HouseAge)+1), right = FALSE)
+colAgeNum <- as.numeric(colAge)
+##
+ageColor <- rep("navy", length(colAge))
+ageColor[which(colAgeNum==2)] <- "orange"
+ageColor[which(colAgeNum==3)] <- "darkred"
+## define label with hover messages
+
+label.msg <- paste(paste("Unit Price:", housing.price$PriceUnitArea),    
+                   paste("\n Dist to MRT:",housing.price$Distance2MRT),"\n")
+
+#labels = cat(label.msg)
+# making leaflet map
+leaflet(Crime) %>%
+  addTiles() %>% 
+  setView(lng=mean(housing.price$Longitude), lat=mean(housing.price$Latitude), zoom = 13) %>%
+  #OpenStreetMap, Stamen, Esri and OpenWeatherMap.
+  #addProviderTiles("Esri.WorldGrayCanvas") %>%
+  addProviderTiles(providers$Esri.WorldGrayCanvas) %>%
+  addCircleMarkers(
+            ~Longitude, 
+            ~Latitude,
+            color = ageColor,
+            radius = ~ sqrt(housing.price$Distance2MRT/10)*0.7,
+            stroke = FALSE, 
+            fillOpacity = 0.4,
+            label = ~label.msg)  %>%
+  addLegend(position = "bottomright", 
+            colors = c("navy", "orange","darkred"),
+            labels= c("[0,5)", "[5,15)", "[15,44.8)"),
+            title= "House Age",
+            opacity = 0.4) %>%
+  addLegendSize(position = 'topright', 
+                  values = sqrt(housing.price$Distance2MRT/10)*0.7,
+                   color = 'gray',
+               fillColor = 'gray',
+                 opacity = .5,
+                   title = 'Distance to MRT',
+                   shape = 'circle',
+             orientation = 'horizontal',
+                  breaks = 5)
