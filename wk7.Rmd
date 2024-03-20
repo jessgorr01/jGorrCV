@@ -1,0 +1,271 @@
+---
+title: "Interactive Maps"
+author: "Jessica Gorr"
+output:
+  html_document:
+    code_folding: hide
+---
+
+```{=html}
+<style type="text/css">
+
+/* Table of content - navigation */
+div#TOC li {
+    list-style:none;
+    background-color:skyblue;
+    background-image:none;
+    background-repeat:none;
+    background-position:0;
+    font-family: Arial, Helvetica, sans-serif;
+    color: darkred;
+}
+
+h1.title {
+  font-size: 24px;
+  color: DarkRed;
+  text-align: center;
+}
+
+h4.author { /* Header 4 - and the author and data headers use this too  */
+    font-size: 18px;
+  font-family: "Times New Roman", Times, serif;
+  color: DarkRed;
+  text-align: center;
+}
+h4.date { /* Header 4 - and the author and data headers use this too  */
+  font-size: 18px;
+  font-family: "Times New Roman", Times, serif;
+  color: DarkBlue;
+  text-align: center;
+}
+h1 { /* Header 3 - and the author and data headers use this too  */
+    font-size: 22px;
+    font-family: "Times New Roman", Times, serif;
+    color: darkred;
+    text-align: center;
+}
+h2 { /* Header 3 - and the author and data headers use this too  */
+    font-size: 18px;
+    font-family: "Times New Roman", Times, serif;
+    color: navy;
+    text-align: left;
+}
+
+h3 { /* Header 3 - and the author and data headers use this too  */
+    font-size: 15px;
+    font-family: "Times New Roman", Times, serif;
+    color: navy;
+    text-align: left;
+}
+
+h4 { /* Header 4 - and the author and data headers use this too  */
+    font-size: 18px;
+    font-family: "Times New Roman", Times, serif;
+    color: darkred;
+    text-align: left;
+}
+</style>
+```
+```{r setup, include=FALSE}
+# code chunk specifies whether the R code, warnings, and output 
+# will be included in the output files.
+install.packages("tidyverse")
+library(tidyverse)
+
+if (!require("knitr")) {
+   install.packages("knitr")
+   library(knitr)
+}
+if (!require("cowplot")) {
+   install.packages("cowplot")
+   library(cowplot)
+}
+if (!require("latex2exp")) {
+   install.packages("latex2exp")
+   library(latex2exp)
+}
+
+install.packages("plotly")
+library("plotly")
+
+
+
+
+
+
+install.packages("dplyr")
+library("dplyr")
+
+if (!require("gapminder")) {
+   install.packages("gapminder")
+   library(gapminder)
+}
+if (!require("png")) {
+    install.packages("png")             # Install png package
+    library("png")
+}
+if (!require("colourpicker")) {
+    install.packages("colourpicker")              
+    library("colourpicker")
+}
+if (!require("gganimate")) {
+    install.packages("gganimate")              
+    library("gganimate")
+}
+if (!require("gifski")) {
+    install.packages("gifski")              
+    library("gifski")
+}
+if (!require("magick")) {
+    install.packages("magick")              
+    library("magick")
+}
+if (!require("grDevices")) {
+    install.packages("grDevices")              
+    library("grDevices")
+}
+if (!require("jpeg")) {
+    install.packages("jpeg")              
+    library("jpeg")
+}
+if (!require("VGAM")) {
+    install.packages("VGAM")              
+    library("VGAM")
+}
+if (!require("MASS")) {
+    install.packages("MASS")              
+    library("MASS")
+}
+if (!require("nnet")) {
+    install.packages("nnet")              
+    library("nnet")
+}
+if (!require("cluster")) {
+    install.packages("cluster")              
+    library("cluster")
+}
+install.packages("leafem")              
+    library("leafem")
+library("leaflet")
+install.packages("leafpop")              
+    library("leafpop")
+ install.packages("htmlwidgets")              
+    library("htmlwidgets")
+ 
+  install.packages("htmltools")              
+    library("htmltools")
+   install.packages("maps")              
+    library("maps")
+# knitr::opts_knit$set(root.dir = "C:/Users/75CPENG/OneDrive - West Chester University of PA/Documents")
+# knitr::opts_knit$set(root.dir = "C:\\STA490\\w05")
+
+
+knitr::opts_chunk$set(echo = TRUE,       
+                      warning = FALSE,   
+                      result = TRUE,   
+                      message = FALSE,
+                      comment = NA)
+```
+
+Interactive Map Assignment: USA Gas Stations
+
+## POC Map
+
+This dataset contains observations of gas stations across the United States. It has coordinates for the locations as well as addresses, states, counties, and zip codes.
+
+A random sample of 500 gas stations was selected from the original dataframe of 72798 observations. The map below shows the sample and various information such as state, county, address, and zip code of each gas station.
+
+```{r, fig.align='center'}
+
+#library(plotly)
+df <- read.csv('POC.csv')
+# geo styling
+
+
+gas <-sample_n(df, 500)
+g <- list(      scope = 'usa',
+           projection = list(type = 'albers usa'),
+             showland = TRUE,
+            landcolor = toRGB("gray95"),
+         subunitcolor = toRGB("gray85"),
+         countrycolor = toRGB("gray85"),
+         countrywidth = 0.5,
+         subunitwidth = 0.5
+       )
+###
+fig <- plot_geo(gas, lat = ~ycoord, lon = ~xcoord) %>% 
+   add_markers( text = ~paste(STATE, county, ADDRESS, ZIPnew, 
+                             sep = "<br>"),
+              symbol = "circle", 
+              hoverinfo = "text")   %>%  
+  layout( title = 'Gas Stations Across the US', 
+          geo = g )
+
+fig
+
+```
+
+Looking at the map of the random sample, there are few gas stations located out west, excluding California. Most of them are on the East Coast, which is due to the higher density population.
+
+## Interactive Map of Philly Crime
+
+The next interactive map has to do with Philadelphia Crimes since 2015. This dataset is a longitudinal dataset. It contains variables such as date, fatal, sex, street_name to help describe important aspects of the crime. But before mapping the data, we must do the following:
+
+a.  Use appropriate R string functions to extract information of year from the variable date and then add the new variable year to the data set.
+b.  Create a subset containing only 2023 data.
+
+```{r, fig.align='center'}
+library(lubridate) 
+
+
+
+data_frame <- read.csv('PhillyCrimeSince2015.csv')
+dates <- as.POSIXct(data_frame$date, format = "%m/%d/%Y %H:%M")
+#format(data_frame, format="%Y")
+
+crime <-  data.frame( date = format(dates, format = "%m/%d/%Y %H:%M") ,
+                          Year= format(dates, format = "%Y"), data_frame)
+
+
+#data_frame$Year <- format(data_frame$date, format="%Y")
+#data_frame$Year <- as.numeric(format(data_frame$date, format="%Y"))
+
+Crime2023 <- crime %>%
+  filter(Year=='2023')
+
+#Crime2023 <- filter(crime ,year == "2023") 
+```
+
+The final sub-setted data set named, Crime2023, has a total of 1666 observations.
+
+The code chunk below will create an interactive map to plot the different locations of the crime. It will satisfy the following conditions:
+
+c.  Use different colors to label fatal and non-fatal crimes.
+d.  Add relevant information such as title and annotations to the map.
+e.  Include other important information in the hover message box.
+
+```{r, fig.align='center'}
+    label.msg <- paste(paste("Fatality:", Crime2023$fatal),
+      paste("Neighborhood:", Crime2023$neighborhood),    
+                   paste("Street Name:", Crime2023$street_name),
+                   paste("Sex:", Crime2023$sex),
+                   paste("Race:", Crime2023$race), "\n")
+
+pal = colorFactor(palette=c("blue", "black"), domain = Crime2023$fatal)
+
+fig2<- leaflet(Crime2023) %>%
+  addTiles() %>% 
+  setView(lng=-75.3768, lat=39.9448, zoom = 10) %>%
+  addCircleMarkers(~lng, 
+            ~lat,
+            color = ~pal(Crime2023$fatal), 
+            label = ~label.msg)%>%
+   addLegend(position = "bottomright", 
+            colors = c("blue", "black"),
+            labels= c("Fatal", "Nonfatal"),
+            title= " Fatality",
+            opacity = 0.4) 
+
+fig2
+```
+This map shows the demographics and locations of various crimes across Philly during 2023. When looking at the map, there seems to be a larger group of nonfatal crimes, which is good. But, the areas of the blue or fatal crimes are all close together. This suggests that certain neighborhoods/policing districts are something to keep an eye on and investigate further. Also, when looking closer at the hovertext, the majority of crimes are committed by men, which is not a surprise.
