@@ -221,6 +221,11 @@ if(!require("magrittr")){
   install.packages("magrittr")
   library(magrittr)
 }
+
+if (!require("RCurl")) {
+    install.packages("RCurl")             # Install RCurl package
+    library("RCurl")
+}
 ### library(magrittr)
 ###
 knitr::opts_chunk$set(echo = TRUE,       
@@ -242,8 +247,10 @@ For the first part of this assignment we will create two subsets from the presid
 ```{r, fig.align='center'}
 library(lubridate) 
 
+x <- getURL("https://jessgorr01.github.io/jGorrCV/wk9/PresidentialElection2000To2020.csv")
+election <- read.csv(text = x)
 
-election <- read.csv('PresidentialElection2000to2020.csv')
+#election <- read.csv('PresidentialElection2000to2020.csv')
 
 election$party_participation <- (election$candidatevotes / election$totalvotes) *100
 
