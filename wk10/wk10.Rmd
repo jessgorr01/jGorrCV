@@ -76,6 +76,162 @@ h4 {
 </style>
 
 ```{r setup, include=FALSE}
+if (!require("tidyverse")) {
+   install.packages("tidyverse")
+   library(tidyverse)
+}
+if (!require("knitr")) {
+   install.packages("knitr")
+   library(knitr)
+}
+if (!require("sf")) {
+   install.packages("sf")
+   library(sf)
+}
+if (!require("terra")) {
+   install.packages("terra")
+   library(terra)
+}
+if (!require("plotly")) {
+   install.packages("plotly")
+   library(plotly)
+}
+if (!require("dplyr")) {
+   install.packages("dplyr")
+   library(dplyr)
+}
+if (!require("png")) {
+    install.packages("png")             
+    library("png")
+}
+if (!require("spData")) {
+    install.packages("spData")             
+    library("spData")
+}
+if (!require("colourpicker")) {
+    install.packages("colourpicker")              
+    library("colourpicker")
+}
+if (!require("gifski")) {
+    install.packages("gifski")              
+    library("gifski")
+}
+if (!require("magick")) {
+    install.packages("magick")              
+    library("magick")
+}
+#if (!require("spDataLarge")) {
+ #   install.packages("spDataLarge")              
+   # library("spDataLarge")
+#}
+### ggplot and extensions
+if (!require("ggplot2")) {
+    install.packages("ggplot2")              
+    library("ggplot2")
+}
+if (!require("gganimate")) {
+    install.packages("gganimate")              
+    library("gganimate")
+}
+if (!require("tmap")) {
+    install.packages("tmap")              
+    library("tmap")
+}
+if (!require("sf")) {
+    install.packages("sf")              
+    library("sf")
+}
+if (!require("tigris")) {
+    install.packages("tigris")              
+    library("tigris")
+}
+if (!require("mapview")) {
+    install.packages("mapview")              
+    library("mapview")
+}
+if (!require("pander")) {
+    install.packages("pander")              
+    library("pander")
+}
+if (!require("lattice")) {
+    install.packages("lattice")
+library("lattice")
+}
+if (!require("sp")) {
+    install.packages("sp")
+library("sp")
+}
+if (!require("leaflet")) {
+    install.packages("leaflet")
+library("leaflet")
+}
+if (!require("leafpop")) {
+    install.packages("leafpop")
+library("leafpop")
+}
+if (!require("leafem")) {
+    install.packages("leafem")
+library("leafem")
+}
+if (!require("spDataLarge")) {
+    install.packages("spDataLarge", repos = "https://geocompr.r-universe.dev")
+library("spDataLarge")
+}
+if (!require("htmlwidgets")) {
+    install.packages("htmlwidgets")
+library("htmlwidgets")
+}
+if (!require("leaflet.extras")) {
+    install.packages("leaflet.extras")
+library("leaflet.extras")
+}
+if (!require("htmltools")) {
+    install.packages("htmltools")
+library("htmltools")
+}
+if(!require("png")){
+  install.packages("png")
+  library(png)
+}
+if(!require("viridis")){
+  install.packages("viridis")
+  library(viridis)
+}
+if(!require("ggmap")){
+  install.packages("ggmap")
+  library(ggmap)
+}
+if(!require("webshot")){
+  install.packages("webshot")
+  library(webshot)
+}
+if(!require("htmlwidgets")){
+  install.packages("htmlwidgets")
+  library(htmlwidgets)
+}
+if(!require("animation")){
+  install.packages("animation")
+  library(animation)
+}
+if(!require("gifski")){
+  install.packages("gifski")
+  library(gifski)
+}
+if(!require("htmlTable")){
+  install.packages("htmlTable")
+  library(htmlTable)
+}
+if(!require("magrittr")){
+  install.packages("magrittr")
+  library(magrittr)
+}
+
+if (!require("RCurl")) {
+    install.packages("RCurl")             # Install RCurl package
+    library("RCurl")
+}
+
+
 knitr::opts_chunk$set(echo = TRUE,       
                       warning = FALSE,   
                       result = TRUE,   
@@ -83,11 +239,11 @@ knitr::opts_chunk$set(echo = TRUE,
                       comment = NA)
 ```
 
-Tableau Assignment: Election Map 2000-2020
+Tableau Assignment: Melbourne Housing
 
-## Election Map
+## Introduction.
 
-For this assignment two maps will be made. The first map is a interactive choropleth map of United States counties. It will have several pages to filter by year to see how each county votes across the US. The second map will be the electoral college map for each election, focusing on the states. This map will indicate how the state votes as a whole and can help see which counties can have the most effect in a state.
+
 
 
 For the first part of this assignment we will create two subsets from the presidentalelection_2000_2020 dataset. The data set contains the year, political party, state, county, and votes. The first dataset created, countydata, will hold the election results for each county. The second dataset will hold the results for each state level. In order to get this data prepared, the subsetted data must be grouped by the county and year. Then, only the highest canidate votes are kept to pick the winning party. For the state dataset, the same process follows, but instead of being grouped by county and year, it is state and year. The code to create these subsets is below:
@@ -97,25 +253,8 @@ library(lubridate)
 
 
 x <- getURL("https://jessgorr01.github.io/jGorrCV/wk10/MelbourneHousing.csv")
-election <- read.csv(text = x)
+housing <- read.csv(text = x)
 
-#election <- read.csv('PresidentialElection2000to2020.csv')
-
-election$party_participation <- (election$candidatevotes / election$totalvotes) *100
-
-countydata <- election %>%
-                group_by(county_name, year) %>%
-                 slice(which.max(party_participation))
-
-
-
-
-statedata <- election %>%
-                group_by(state, year) %>%
-                 slice(which.max(party_participation))
-
-write.csv(countydata,'C:/Users/jessg/OneDrive - West Chester University of PA/sta553/wk9/countydata.csv')
-write.csv(statedata,'C:/Users/jessg/OneDrive - West Chester University of PA/sta553/wk9/statedata.csv')
 
 ```
 
