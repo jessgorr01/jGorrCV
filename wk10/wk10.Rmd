@@ -252,8 +252,8 @@ For the first part of this assignment we will create two subsets from the presid
 library(lubridate) 
 
 
-x <- getURL("https://jessgorr01.github.io/jGorrCV/wk10/MelbourneHousing.csv")
-housing <- read.csv(text = x)
+x <- getURL("https://jessgorr01.github.io/jGorrCV/wk10/turnover-data-set.csv")
+turnover <- read.csv(text = x)
 
 
 ```
