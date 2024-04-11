@@ -1,0 +1,172 @@
+---
+title: "Interactive Tableau Graphics and Dashboards"
+author: "Jessica Gorr"
+date: "West Chester University"
+output: 
+  html_document: 
+    toc: yes
+    toc_depth: 4
+    toc_float: no
+    code_folding: hide
+    code_download: yes
+    smooth_scroll: yes
+    number_sections: yes
+    theme: readable
+---
+      
+<style type="text/css">
+div#TOC li {
+    list-style:none;
+    background-image:none;
+    background-repeat:none;
+    background-position:0;
+}
+h1.title {
+  font-size: 24px;
+  color: DarkRed;
+  text-align: center;
+}
+h4.author { 
+  /* Header 4 - and the author and data headers use this too  */
+  font-size: 18px;
+  font-family: "Times New Roman", Times, serif;
+  color: DarkRed;
+  text-align: center;
+}
+h4.date { 
+  /* Header 4 - and the author and data headers use this too  */
+  font-size: 18px;
+  font-family: "Times New Roman", Times, serif;
+  color: DarkBlue;
+  text-align: center;
+}
+h1 { 
+    /* Header 3 - and the author and data headers use this too  */
+    font-size: 22px;
+    font-family: "Times New Roman", Times, serif;
+    color: darkred;
+    text-align: center;
+}
+h2 { 
+    /* Header 3 - and the author and data headers use this too  */
+    font-size: 18px;
+    font-family: "Times New Roman", Times, serif;
+    color: navy;
+    text-align: left;
+}
+h3 { 
+    /* Header 3 - and the author and data headers use this too  */
+    font-size: 15px;
+    font-family: "Times New Roman", Times, serif;
+    color: darkred;
+    font-face: bold;
+    text-align: left;
+}
+h4 { 
+    /* Header 4 - and the author and data headers use this too  */
+    font-size: 18px;
+    font-family: "Times New Roman", Times, serif;
+    color: darkred;
+    text-align: left;
+}
+   /* center maps using chunk option: fig.align='center' */
+.html-widget {
+    margin: auto;
+}
+</style>
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,       
+                      warning = FALSE,   
+                      result = TRUE,   
+                      message = FALSE,
+                      comment = NA)
+```
+
+Tableau Assignment: Election Map 2000-2020
+
+## Election Map
+
+For this assignment two maps will be made. The first map is a interactive choropleth map of United States counties. It will have several pages to filter by year to see how each county votes across the US. The second map will be the electoral college map for each election, focusing on the states. This map will indicate how the state votes as a whole and can help see which counties can have the most effect in a state.
+
+
+For the first part of this assignment we will create two subsets from the presidentalelection_2000_2020 dataset. The data set contains the year, political party, state, county, and votes. The first dataset created, countydata, will hold the election results for each county. The second dataset will hold the results for each state level. In order to get this data prepared, the subsetted data must be grouped by the county and year. Then, only the highest canidate votes are kept to pick the winning party. For the state dataset, the same process follows, but instead of being grouped by county and year, it is state and year. The code to create these subsets is below:
+
+```{r, fig.align='center'}
+library(lubridate) 
+
+
+x <- getURL("https://jessgorr01.github.io/jGorrCV/wk10/MelbourneHousing.csv")
+election <- read.csv(text = x)
+
+#election <- read.csv('PresidentialElection2000to2020.csv')
+
+election$party_participation <- (election$candidatevotes / election$totalvotes) *100
+
+countydata <- election %>%
+                group_by(county_name, year) %>%
+                 slice(which.max(party_participation))
+
+
+
+
+statedata <- election %>%
+                group_by(state, year) %>%
+                 slice(which.max(party_participation))
+
+write.csv(countydata,'C:/Users/jessg/OneDrive - West Chester University of PA/sta553/wk9/countydata.csv')
+write.csv(statedata,'C:/Users/jessg/OneDrive - West Chester University of PA/sta553/wk9/statedata.csv')
+
+```
+
+
+Now that the data has been subsetted, it is time to create the map in tableau. 
+
+
+<table>
+<tr>
+<td>
+<div class='tableauPlaceholder' id='viz1712197915676' style='position: relative'>
+<noscript><a href='#'>
+<img alt='Election Map of US Counties Party Winners by Year - 2000 ' src='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;co&#47;countymap_17121978590190&#47;Sheet1&#47;1_rss.png' style='border: none' /></a>
+</noscript>
+<object class='tableauViz'  style='display:none;'><param name='host_url' value='https%3A%2F%2Fpublic.tableau.com%2F' /> 
+<param name='embed_code_version' value='3' /> <param name='site_root' value='' /><param name='name' value='countymap_17121978590190&#47;Sheet1' />
+<param name='tabs' value='no' /><param name='toolbar' value='yes' /><param name='static_image' value='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;co&#47;countymap_17121978590190&#47;Sheet1&#47;1.png' /> 
+<param name='animate_transition' value='yes' />
+<param name='display_static_image' value='yes' />
+<param name='display_spinner' value='yes' /><param name='display_overlay' value='yes' /><param name='display_count' value='yes' /><param name='language' value='en-US' /><param name='filter' value='publish=yes' />
+</object>
+</div>                
+
+
+
+<script type='text/javascript'> 
+                    var divElement = document.getElementById('viz1712197915676');                    var vizElement = divElement.getElementsByTagName('object')[0];                    vizElement.style.width='100%';vizElement.style.height=(divElement.offsetWidth*0.75)+'px';                    var scriptElement = document.createElement('script');                    scriptElement.src = 'https://public.tableau.com/javascripts/api/viz_v1.js';                    vizElement.parentNode.insertBefore(scriptElement, vizElement);   </script>         
+</td>
+</tr>
+</table>
+
+County Map Analysis
+
+When looking at the county maps, there is a clear distinction amoungst the population. In highly populated counties, the votes lean towards the Democratic Party, while in lesser populated counties the vote leans towards Republican.This can be seen nearly every election year.
+
+
+State Map Analysis
+
+When looking at the state election map, it protrays simimilarities to the counties. The east coast and California are Democatic for the most part. The main exception is Pennsylvania, which is a swing state. This can be seen from 2012 and 2016. The Mid-West and Western part of the US is mainly Republican. This can be due to smaller populations and way of life in these states.
+
+<table>
+<tr>
+<td>
+
+
+
+<div class='tableauPlaceholder' id='viz1712199196582' style='position: relative'><noscript><a href='#'><img alt='US State Election Map by Year - 2012 ' src='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;St&#47;StateMap_17121991844310&#47;Sheet1&#47;1_rss.png' style='border: none' /></a></noscript><object class='tableauViz'  style='display:none;'><param name='host_url' value='https%3A%2F%2Fpublic.tableau.com%2F' /> <param name='embed_code_version' value='3' /> <param name='site_root' value='' /><param name='name' value='StateMap_17121991844310&#47;Sheet1' /><param name='tabs' value='no' /><param name='toolbar' value='yes' /><param name='static_image' value='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;St&#47;StateMap_17121991844310&#47;Sheet1&#47;1.png' /> <param name='animate_transition' value='yes' /><param name='display_static_image' value='yes' /><param name='display_spinner' value='yes' /><param name='display_overlay' value='yes' /><param name='display_count' value='yes' /><param name='language' value='en-US' /><param name='filter' value='publish=yes' /></object></div>           
+
+<script type='text/javascript'>                    var divElement = document.getElementById('viz1712199196582');                    var vizElement = divElement.getElementsByTagName('object')[0];                    vizElement.style.width='100%';vizElement.style.height=(divElement.offsetWidth*0.75)+'px';                    var scriptElement = document.createElement('script');                    scriptElement.src = 'https://public.tableau.com/javascripts/api/viz_v1.js';                    vizElement.parentNode.insertBefore(scriptElement, vizElement);                </script>
+
+</td>
+</tr>
+</table>
+
