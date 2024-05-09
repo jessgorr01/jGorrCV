@@ -271,12 +271,8 @@ write.csv(statedata,'C:/Users/jessg/OneDrive - West Chester University of PA/sta
 ```
 
 
-Now that the data has been subsetted, it is time to create the map in tableau. 
+Now that the data has been subsetted, it is time to create the map in tableau.
 
-
-<table>
-<tr>
-<td>
 <div class='tableauPlaceholder' id='viz1712197915676' style='position: relative'>
 <noscript><a href='#'>
 <img alt='Election Map of US Counties Party Winners by Year - 2000 ' src='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;co&#47;countymap_17121978590190&#47;Sheet1&#47;1_rss.png' style='border: none' /></a>
@@ -293,10 +289,9 @@ Now that the data has been subsetted, it is time to create the map in tableau.
 
 
 <script type='text/javascript'> 
-                    var divElement = document.getElementById('viz1712197915676');                    var vizElement = divElement.getElementsByTagName('object')[0];                    vizElement.style.width='100%';vizElement.style.height=(divElement.offsetWidth*0.75)+'px';                    var scriptElement = document.createElement('script');                    scriptElement.src = 'https://public.tableau.com/javascripts/api/viz_v1.js';                    vizElement.parentNode.insertBefore(scriptElement, vizElement);   </script>         
-</td>
-</tr>
-</table>
+                    var divElement = document.getElementById('viz1712197915676');                    var vizElement = divElement.getElementsByTagName('object')[0];                    vizElement.style.width='100%';vizElement.style.height=(divElement.offsetWidth*0.75)+'px';                    var scriptElement = document.createElement('script');                    scriptElement.src = 'https://public.tableau.com/javascripts/api/viz_v1.js';                    vizElement.parentNode.insertBefore(scriptElement, vizElement);   
+</script>         
+
 
 County Map Analysis
 
@@ -305,19 +300,11 @@ When looking at the county maps, there is a clear distinction amoungst the popul
 
 State Map Analysis
 
-When looking at the state election map, it protrays simimilarities to the counties. The east coast and California are Democatic for the most part. The main exception is Pennsylvania, which is a swing state. This can be seen from 2012 and 2016. The Mid-West and Western part of the US is mainly Republican. This can be due to smaller populations and way of life in these states.
-
-<table>
-<tr>
-<td>
-
-
-
 <div class='tableauPlaceholder' id='viz1712199196582' style='position: relative'><noscript><a href='#'><img alt='US State Election Map by Year - 2012 ' src='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;St&#47;StateMap_17121991844310&#47;Sheet1&#47;1_rss.png' style='border: none' /></a></noscript><object class='tableauViz'  style='display:none;'><param name='host_url' value='https%3A%2F%2Fpublic.tableau.com%2F' /> <param name='embed_code_version' value='3' /> <param name='site_root' value='' /><param name='name' value='StateMap_17121991844310&#47;Sheet1' /><param name='tabs' value='no' /><param name='toolbar' value='yes' /><param name='static_image' value='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;St&#47;StateMap_17121991844310&#47;Sheet1&#47;1.png' /> <param name='animate_transition' value='yes' /><param name='display_static_image' value='yes' /><param name='display_spinner' value='yes' /><param name='display_overlay' value='yes' /><param name='display_count' value='yes' /><param name='language' value='en-US' /><param name='filter' value='publish=yes' /></object></div>           
 
 <script type='text/javascript'>                    var divElement = document.getElementById('viz1712199196582');                    var vizElement = divElement.getElementsByTagName('object')[0];                    vizElement.style.width='100%';vizElement.style.height=(divElement.offsetWidth*0.75)+'px';                    var scriptElement = document.createElement('script');                    scriptElement.src = 'https://public.tableau.com/javascripts/api/viz_v1.js';                    vizElement.parentNode.insertBefore(scriptElement, vizElement);                </script>
 
-</td>
-</tr>
-</table>
+When looking at the state election map, it protrays simimilarities to the counties. The east coast and California are Democatic for the most part. The main exception is Pennsylvania, which is a swing state. This can be seen from 2012 and 2016. The Mid-West and Western part of the US is mainly Republican. This can be due to smaller populations and way of life in these states.
+
+
 
